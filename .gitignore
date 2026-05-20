@@ -1,0 +1,14 @@
+data/
+outputs/
+notebooks/
+experiments_1/
+experiments_2/
+exploration/
+release/
+experiments_2_rf_gcn.tar.gz
+paper_001_rf_gcn_template.tar.gz
+selected_datasets.yaml
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
