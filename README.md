@@ -51,9 +51,6 @@ Runs Tolokers, 1 seed, 100 epochs. Verifies the installation is working.
 # Paper setting (default): 5 datasets, 5 seeds, 200 epochs, 5 labels/class
 python run_experiment.py
 
-# All 16 datasets
-python run_experiment.py --full
-
 # Custom subset
 python run_experiment.py --datasets PubMed Tolokers --seeds 1 2 3
 
@@ -77,6 +74,7 @@ data/                 extracted from data.tar.gz
   Actor/data.pt
   Minesweeper/data.pt
   PubMed/data.pt
+  Squirrel/data.pt
   Tolokers/data.pt
 
 outputs/              created at runtime

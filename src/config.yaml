@@ -18,25 +18,6 @@ datasets:
   - Squirrel
   - Tolokers
 
-# Used by --full flag.
-all_datasets:
-  - Actor
-  - Amazon-Ratings
-  - Chameleon
-  - CiteSeer
-  - Cora
-  - Cornell
-  - Minesweeper
-  - MixHop
-  - PubMed
-  - Questions
-  - Roman-Empire
-  - Squirrel
-  - Texas
-  - Tolokers
-  - WikiCS
-  - Wisconsin
-
 seeds: [1, 2, 3, 4, 5]
 
 # Labels per class for semi-supervised setting.

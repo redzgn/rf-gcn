@@ -5,7 +5,6 @@ RF-GCN: Hop-Distance-Weighted Label Propagation
 Usage:
   python run_experiment.py                    # paper setting: 5 datasets, 5 seeds
   python run_experiment.py --quick            # smoke test: 1 dataset, 1 seed, 100 epochs
-  python run_experiment.py --full             # all 16 datasets, 5 seeds
   python run_experiment.py --sweep_labels     # label-rate sensitivity: 3/5/10/20 lpc
   python run_experiment.py --datasets PubMed Tolokers
   python run_experiment.py --seeds 1 2 3 4 5 6 7 8 9 10
@@ -317,11 +316,9 @@ def parse_args():
 
     mode = p.add_mutually_exclusive_group()
     mode.add_argument("--quick", action="store_true",
-                      help="Cora only, seed=1, 100 epochs — for smoke testing")
-    mode.add_argument("--full", action="store_true",
-                      help="All 16 datasets, 5 seeds")
+                      help="Tolokers only, seed=1, 100 epochs — for smoke testing")
     mode.add_argument("--sweep_labels", action="store_true",
-                      help="Sweep labels_per_class in [10, 20, 40, 80]")
+                      help="Sweep labels_per_class in [3, 5, 10, 20]")
 
     return p.parse_args()
 
@@ -349,10 +346,6 @@ def main():
         datasets = ["Tolokers"]
         seeds = [1]
         cfg["training"]["epochs"] = 100
-        label_rates = [int(args.labels_per_class or cfg["labels_per_class"])]
-    elif args.full:
-        datasets = cfg["all_datasets"]
-        seeds = args.seeds or [1, 2, 3, 4, 5]
         label_rates = [int(args.labels_per_class or cfg["labels_per_class"])]
     elif args.sweep_labels:
         datasets = args.datasets or cfg["datasets"]

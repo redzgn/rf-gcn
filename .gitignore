@@ -3,6 +3,7 @@ outputs/
 notebooks/
 experiments_1/
 experiments_2/
+experiments_3/
 exploration/
 release/
 experiments_2_rf_gcn.tar.gz
