@@ -1,14 +1,8 @@
 data/
 outputs/
 notebooks/
-experiments_1/
-experiments_2/
-experiments_3/
-exploration/
-release/
-experiments_2_rf_gcn.tar.gz
-paper_001_rf_gcn_template.tar.gz
-selected_datasets.yaml
+legacy/
+recheck1/
 __pycache__/
 *.pyc
 *.pyo
