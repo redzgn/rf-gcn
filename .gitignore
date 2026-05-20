@@ -3,6 +3,7 @@ outputs/
 notebooks/
 legacy/
 recheck1/
+paper/
 __pycache__/
 *.pyc
 *.pyo
