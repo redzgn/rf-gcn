@@ -319,6 +319,8 @@ def parse_args():
                       help="Tolokers only, seed=1, 100 epochs — for smoke testing")
     mode.add_argument("--sweep_labels", action="store_true",
                       help="Sweep labels_per_class in [3, 5, 10, 20]")
+    mode.add_argument("--sweep_layers", action="store_true",
+                      help="Sweep num_layers in [1..10], fixed lpc=5")
 
     return p.parse_args()
 
@@ -351,6 +353,10 @@ def main():
         datasets = args.datasets or cfg["datasets"]
         seeds = args.seeds or cfg["seeds"]
         label_rates = [3, 5, 10, 20]
+    elif args.sweep_layers:
+        datasets = args.datasets or cfg["datasets"]
+        seeds = args.seeds or cfg["seeds"]
+        label_rates = [int(args.labels_per_class or cfg["labels_per_class"])]
     else:
         datasets = args.datasets or cfg["datasets"]
         seeds = args.seeds or cfg["seeds"]
@@ -379,44 +385,53 @@ def main():
     print(f"Output     : {output_dir}")
     print()
 
-    raw_path = os.path.join(output_dir, "raw_results.csv")
+    layer_values = list(range(1, 11)) if args.sweep_layers else [None]
+    raw_path = os.path.join(output_dir,
+                            "layer_sweep_results.csv" if args.sweep_layers else "raw_results.csv")
     rows = []
 
-    total = len(label_rates) * len(datasets) * len(all_variants) * len(seeds)
+    total = len(layer_values) * len(label_rates) * len(datasets) * len(all_variants) * len(seeds)
     done = 0
 
-    for lpc in label_rates:
-        for dataset_name in datasets:
-            for variant in all_variants:
-                for seed in seeds:
-                    done += 1
-                    tag = f"[{done}/{total}] {dataset_name} | {variant['name']} | seed={seed} | lpc={lpc}"
-                    print(tag, end=" ... ", flush=True)
-                    t0 = time.time()
+    for num_layers in layer_values:
+        if num_layers is not None:
+            cfg["training"]["num_layers"] = num_layers
+        for lpc in label_rates:
+            for dataset_name in datasets:
+                for variant in all_variants:
+                    for seed in seeds:
+                        done += 1
+                        layer_tag = f" | L={num_layers}" if num_layers is not None else ""
+                        tag = f"[{done}/{total}] {dataset_name} | {variant['name']} | seed={seed} | lpc={lpc}{layer_tag}"
+                        print(tag, end=" ... ", flush=True)
+                        t0 = time.time()
 
-                    try:
-                        row = train_one(dataset_name, variant, seed, cfg, device, lpc)
-                        rows.append(row)
-                        elapsed = time.time() - t0
-                        print(
-                            f"test={row['best_test_acc']:.4f}  "
-                            f"val={row['best_val_acc']:.4f}  "
-                            f"epoch={row['best_epoch']}  "
-                            f"pairs={row['num_rf_pairs']}  "
-                            f"{elapsed:.1f}s"
-                        )
-                    except Exception as e:
-                        print(f"FAILED: {e}")
-                        rows.append({
-                            "dataset": dataset_name,
-                            "method": variant["name"],
-                            "seed": seed,
-                            "labels_per_class": lpc,
-                            "failed": True,
-                            "error": str(e),
-                        })
+                        try:
+                            row = train_one(dataset_name, variant, seed, cfg, device, lpc)
+                            if num_layers is not None:
+                                row["num_layers"] = num_layers
+                            rows.append(row)
+                            elapsed = time.time() - t0
+                            print(
+                                f"test={row['best_test_acc']:.4f}  "
+                                f"val={row['best_val_acc']:.4f}  "
+                                f"epoch={row['best_epoch']}  "
+                                f"pairs={row['num_rf_pairs']}  "
+                                f"{elapsed:.1f}s"
+                            )
+                        except Exception as e:
+                            print(f"FAILED: {e}")
+                            rows.append({
+                                "dataset": dataset_name,
+                                "method": variant["name"],
+                                "seed": seed,
+                                "labels_per_class": lpc,
+                                "num_layers": num_layers,
+                                "failed": True,
+                                "error": str(e),
+                            })
 
-                    pd.DataFrame(rows).to_csv(raw_path, index=False)
+                        pd.DataFrame(rows).to_csv(raw_path, index=False)
 
     df = pd.DataFrame(rows)
     if "failed" in df.columns:
@@ -433,7 +448,25 @@ def main():
     summary_path = os.path.join(output_dir, "summary.csv")
     build_summary(df).to_csv(summary_path, index=False)
 
-    if args.sweep_labels:
+    if args.sweep_layers:
+        print("\n--- Layer Sweep: mean test acc (%) ---")
+        methods_show = ["VanillaGCN", "RF-GCN-LCE-200"]
+        layers = sorted(df["num_layers"].dropna().unique().astype(int))
+        header = f"{'Dataset':<14} {'Method':<20}" + "".join(f"  L={l}" for l in layers)
+        print(header)
+        print("-" * len(header))
+        for ds in datasets:
+            for method in methods_show:
+                sub = df[(df["dataset"] == ds) & (df["method"] == method)]
+                if sub.empty:
+                    continue
+                row_str = f"{ds:<14} {method:<20}"
+                for l in layers:
+                    m = sub[sub["num_layers"] == l]["best_test_acc"].mean()
+                    row_str += f"  {m*100:5.1f}" if not pd.isna(m) else "    ---"
+                print(row_str)
+        print()
+    elif args.sweep_labels:
         print_label_rate_table(df)
     else:
         # Find the best RF-GCN variant by mean test acc across datasets

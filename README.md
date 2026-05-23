@@ -15,7 +15,6 @@ class), RF-GCN consistently outperforms a vanilla GCN baseline.
 | Actor       | 20.58 +- 1.13  | 22.50 +- 1.47  | +1.9%    |
 | PubMed      | 70.73 +- 1.52  | 72.48 +- 2.40  | +1.7%    |
 | Minesweeper | 68.58 +- 13.35 | 70.04 +- 14.79 | +1.5%    |
-| Squirrel    | 21.46 +- 1.97  | 22.52 +- 1.63  | +1.1%    |
 
 ## Reproduce in 3 commands
 

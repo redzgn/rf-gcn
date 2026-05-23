@@ -15,7 +15,6 @@ datasets:
   - Actor
   - Minesweeper
   - PubMed
-  - Squirrel
   - Tolokers
 
 seeds: [1, 2, 3, 4, 5]
