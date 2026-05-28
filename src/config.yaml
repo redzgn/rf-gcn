@@ -10,7 +10,7 @@
 data_root: data        # relative to repo root; resolved by run_experiment.py
 output_dir: outputs    # relative to repo root; resolved by run_experiment.py
 
-# Paper datasets — the five included in Table 1.
+# Paper datasets — the four included in Table 1.
 datasets:
   - Actor
   - Minesweeper

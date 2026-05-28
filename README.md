@@ -47,14 +47,17 @@ Runs Tolokers, 1 seed, 100 epochs. Verifies the installation is working.
 ## Full option reference
 
 ```bash
-# Paper setting (default): 5 datasets, 5 seeds, 200 epochs, 5 labels/class
+# Paper setting (default): 4 datasets, 5 seeds, 400 epochs, 5 labels/class
 python run_experiment.py
 
-# Custom subset
+# Custom dataset and seed subset
 python run_experiment.py --datasets PubMed Tolokers --seeds 1 2 3
 
 # Label-rate sensitivity sweep (3 / 5 / 10 / 20 labels per class)
-python run_experiment.py --sweep_labels --datasets PubMed Tolokers
+python run_experiment.py --sweep_labels
+
+# Override epochs or device
+python run_experiment.py --epochs 200 --device cuda
 ```
 
 ## Code structure
@@ -73,7 +76,6 @@ data/                 extracted from data.tar.gz
   Actor/data.pt
   Minesweeper/data.pt
   PubMed/data.pt
-  Squirrel/data.pt
   Tolokers/data.pt
 
 outputs/              created at runtime
