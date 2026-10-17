@@ -17,7 +17,7 @@ datasets:
   - PubMed
   - Tolokers
 
-seeds: [1, 2, 3, 4, 5]
+seeds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 # Labels per class for semi-supervised setting.
 # 5 per class forces VanillaGCN into the regime where it clearly struggles,
@@ -32,11 +32,12 @@ training:
   lr: 0.01
   weight_decay: 0.0005
 
+# RF settings selected on validation accuracy (Table 3 of the paper).
 rf:
   min_hop: 1             # include immediate neighbors (highest homophily)
-  max_hop: 3             # extend beyond 2-layer GCN's natural reach
-  alpha: 0.7             # distance decay: weight = alpha^hop * source_homophily
-  pairs_per_source: 16   # pairs per source per hop
+  max_hop: 4             # extend beyond 2-layer GCN's natural reach
+  alpha: 0.5             # distance decay: weight = alpha^hop * source_homophily
+  pairs_per_source: 8    # pairs per source per hop
   pair_graph: undirected
   rampup_epochs: 0       # RF active from epoch 1 — needed when labels are scarce
 

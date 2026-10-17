@@ -469,12 +469,12 @@ def main():
     elif args.sweep_labels:
         print_label_rate_table(df)
     else:
-        # Find the best RF-GCN variant by mean test acc across datasets
+        # Pick the RF-GCN variant by mean validation acc across datasets (test data play no part)
         rf_variants = [v["name"] for v in all_variants if v["method"] == "rf_gcn"]
         if rf_variants and "VanillaGCN" in df["method"].values:
             summary = build_summary(df)
             rf_means = {
-                m: summary[summary["method"] == m]["mean_test"].mean()
+                m: summary[summary["method"] == m]["mean_val"].mean()
                 for m in rf_variants
                 if m in summary["method"].values
             }
