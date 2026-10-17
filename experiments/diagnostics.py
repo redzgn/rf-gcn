@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Data and RF-pair diagnostics (Table 1 and Table S5 of the paper; no training).
+"""Data and RF-pair diagnostics (Tables 1, 2 and S5 of the paper; no training).
 
 E2 / R1.4   class counts per split, majority-class baseline
 R1.8        edge convention and average degree
@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 import scipy.sparse as sp
 import torch
+from torch_geometric.utils import homophily
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "src"))
@@ -78,6 +79,10 @@ for name in DATASETS:
     info = {"dataset": name, "nodes": n, "stored_edges": len(stored),
             "reciprocity": round(recip, 3), "undirected_edges": E_und,
             "avg_degree": round(2 * E_und / n, 2), "features": int(raw.x.shape[1])}
+    # Table 2: homophily on the stored edges; "edge_insensitive" is the
+    # class-insensitive edge homophily of Lim et al. (2021)
+    for m in ("edge", "node", "edge_insensitive"):
+        info[f"homophily_{m}"] = round(float(homophily(ei, raw.y, method=m)), 3)
     for k, m in masks.items():
         cnt = np.bincount(y[m], minlength=C)
         info[f"{k}_n"] = int(m.sum())

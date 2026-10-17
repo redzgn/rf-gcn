@@ -73,7 +73,7 @@ Results are printed to the terminal and saved under `outputs/`.
 tar -zxvf data.tar.gz
 cd experiments
 python run_experiments.py           # 1,560 training runs + label propagation (~30 min on an RTX 4090)
-python diagnostics.py preliminary   # dataset and RF-pair statistics (Tables 1 and S5)
+python diagnostics.py preliminary   # dataset and RF-pair statistics (Tables 1, 2 and S5)
 python diagnostics.py selected
 python make_tables.py               # Tables 1, 4-7 and S1-S5 -> results/tables.md, results/latex/
 ```
