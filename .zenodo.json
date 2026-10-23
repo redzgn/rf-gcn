@@ -1,0 +1,20 @@
+{
+  "title": "RF-GCN: Receptive-Field Regularized Graph Convolutional Network (code and data splits)",
+  "upload_type": "software",
+  "description": "Code, fixed data splits and experiment scripts for the paper \"RF-GCN: Receptive-Field Regularized Graph Convolutional Network\" (Zheng, Peng, Wang and Wen; submitted to PeerJ Computer Science). data.tar.gz contains the fixed random 80/10/10 splits used in all experiments for four public benchmark datasets: Actor (Pei et al., 2020, Geom-GCN), PubMed (Yang et al., 2016, Planetoid) and Minesweeper and Tolokers (Platonov et al., 2023, heterophilous-graphs benchmark). The scripts in experiments/ produce every result table of the paper.",
+  "creators": [
+    {"name": "Zheng, Guineng", "affiliation": "Guangzhou College of Technology and Business"},
+    {"name": "Peng, Ting", "affiliation": "University of Iowa"},
+    {"name": "Wang, Chuanchuan", "affiliation": "Guangzhou College of Technology and Business"},
+    {"name": "Wen, Haifeng", "affiliation": "Guangzhou College of Technology and Business"}
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "keywords": [
+    "graph neural networks",
+    "graph convolutional network",
+    "semi-supervised node classification",
+    "label scarcity",
+    "regularization"
+  ]
+}
